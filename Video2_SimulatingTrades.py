@@ -4,6 +4,7 @@ import yfinance as yf
 import datetime as dt
 from pandas_datareader import data as pdr
 
+rt = []
 yf.pdr_override()
 stocks = ['ADANIPORTS.NS',
  'ASIANPAINT.NS',
@@ -60,12 +61,13 @@ for stock in stocks:
 	print(stock)
 
 	startyear=2019
+	endyear=2020
 	startmonth=1
 	startday=1
 
 	start=dt.datetime(startyear,startmonth,startday)
 
-	now=dt.datetime.now()
+	now=dt.datetime(endyear,startmonth,startday)
 
 	df=pdr.get_data_yahoo(stock,start,now)
 
@@ -169,9 +171,11 @@ for stock in stocks:
 	print("Max Return: "+ maxR)
 	print("Max Loss: "+ maxL)
 	print("Total return over "+str(ng+nl)+ " trades: "+ str(totalR)+"%" )
+	rt.append(totalR)
 	#print("Example return Simulating "+str(n)+ " trades: "+ str(nReturn)+"%" )
 	print()
 
+print(f"total %Change for all stocks : {sum(rt)}")
 
 			
 
