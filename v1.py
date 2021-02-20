@@ -141,7 +141,7 @@ symbols = ['ADANIPORTS.NS',
  'ULTRACEMCO.NS',
  'UPL.NS',
  'WIPRO.NS']
-symbols = ["SBIN.NS"]
+# symbols = ["SBIN.NS"]
 # symbol = symbols[0]
 for symbol in symbols:
     # getting EOD data and intraday data
@@ -187,7 +187,17 @@ for symbol in symbols:
         cd_buy = False
     #     cd_sell = False        
     #     conditions for buy
-        cd_buy = (openn15 > pre_high) and (openn15 == low15) and openn15 < r3 #and today.loc[[today.index[0]+timedelta(minutes = 15)],'High'][0]> high15
+        cd_buy = (openn15 > pre_high) and (openn15 == low15) # checking
+        if cd_buy :
+            buy_flag = 0
+            for j in today.index:
+                if j == today.index[0]: continue
+                if high15 > today.loc[j,"High"] :
+                    buy_flag = 1
+            if not(buy_flag):
+                continue
+
+
         if cd_buy:
             trade[e] = {}
             for i in today.index:
@@ -196,7 +206,7 @@ for symbol in symbols:
                     pos = 1
                     bp = high15
                     continue 
-                elif today.loc[i, "High"] > r3 and pos ==1 :
+                elif today.loc[i, "High"] > r3 and pos == 1 :
                     pos = 0
                     sp = r3
                     pc=(sp/bp-1)*100
