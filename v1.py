@@ -6,7 +6,11 @@ from pandas_datareader import data as pdr
 from finta import TA
 from datetime import timedelta
 
+#%%
+
 overall = []
+print("heelo")
+#%%
 symbols = ['ADANIPORTS.NS',
  'ASIANPAINT.NS',
  'AXISBANK.NS',
