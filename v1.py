@@ -6,6 +6,7 @@ from pandas_datareader import data as pdr
 from finta import TA
 from datetime import timedelta
 
+overall = []
 symbols = ['ADANIPORTS.NS',
  'ASIANPAINT.NS',
  'AXISBANK.NS',
@@ -188,6 +189,56 @@ for symbol in symbols:
     print("Total return over "+str(ng+nl)+ " trades: "+ str(totalR)+"%" )
     #print("Example return Simulating "+str(n)+ " trades: "+ str(nReturn)+"%" )
     print()
+    overall.append(totalR)
 
 
+gains=0
+ng=0
+losses=0
+nl=0
+totalR=1
+
+for i in overall:
+    if(i>0):
+        gains+=i
+        ng+=1
+    else:
+        losses+=i
+        nl+=1
+    totalR=totalR*((i/100)+1)
+
+totalR=round((totalR-1)*100,2)
+
+if(ng>0):
+    avgGain=gains/ng
+    maxR=str(max(overall))
+else:
+    avgGain=0
+    maxR="undefined"
+
+if(nl>0):
+    avgLoss=losses/nl
+    maxL=str(min(overall))
+    ratio=str(-avgGain/avgLoss)
+else:
+    avgLoss=0
+    maxL="undefined"
+    ratio="inf"
+
+if(ng>0 or nl>0):
+    battingAvg=ng/(ng+nl)
+else:
+    battingAvg=0
+
+print()
+print(symbol)
+print("Batting Avg: "+ str(battingAvg))
+print("Gain/loss ratio: "+ ratio)
+print("Average Gain: "+ str(avgGain))
+print("Average Loss: "+ str(avgLoss))
+print("Max Return: "+ maxR)
+print("Max Loss: "+ maxL)
+print("Total return over "+str(ng+nl)+ " trades: "+ str(totalR)+"%" )
+#print("Example return Simulating "+str(n)+ " trades: "+ str(nReturn)+"%" )
+print()
 
