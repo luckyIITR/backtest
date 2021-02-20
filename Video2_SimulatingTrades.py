@@ -60,8 +60,8 @@ for stock in stocks:
 # stock=input("Enter a stock ticker symbol: ")
 	print(stock)
 
-	startyear=2019
-	endyear=2020
+	startyear=2020
+	endyear=2021
 	startmonth=1
 	startday=1
 

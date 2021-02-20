@@ -1,14 +1,19 @@
-# import pandas as pd
+import pandas as pd
 # import numpy as np
 import yfinance as yf
 import datetime as dt
 # from pandas_datareader import intra_data as pdr
 from finta import TA
+import os
+import sqlite3
 # from datetime import timedelta
 
+dbd = r'F:\Database\15min_data'
+#Connecting to Database
+db = sqlite3.connect(os.path.join(dbd,"NSEEQ.db"))
 
 def get_daily_data(symbol):
-    daily = yf.download(tickers=symbol, period="100d", end=dt.datetime.now())
+    daily = yf.download(tickers=symbol, start=dt.datetime(2019,9,1), end=dt.datetime.now())
     daily.index = daily.index.tz_localize(None)
     daily.drop(["Adj Close", 'Volume'], axis=1, inplace=True)
     daily["pre_close"] = daily['Close'].shift(1)
@@ -17,10 +22,26 @@ def get_daily_data(symbol):
     return daily
 
 def get_intra_data(symbol):
-    data = yf.download(tickers=symbol, interval="15m", period="59d", end=dt.datetime.now())
-    data.index = data.index.tz_localize(None)
-    data.drop(["Adj Close", 'Volume'], axis=1, inplace=True)
-    return data
+    symbol_check = {'3MINDIA': 'MINDIA',
+                    'BAJAJ-AUTO': 'BAJAJAUTO',
+                    'J&KBANK': 'JKBANK',
+                    'L&TFH': 'LTFH',
+                    'M&MFIN': 'MMFIN',
+                    'M&M': 'MM',
+                    'NAM-INDIA': 'NAMINDIA',
+                    'MCDOWELL-N': 'MCDOWELLN'}
+    symbol = symbol[:-3]
+    if symbol in list(symbol_check.keys()):
+        symbol = symbol_check[symbol]
+
+    df = pd.read_sql('''SELECT * FROM %s;''' % symbol, con=db)
+    df.set_index('time', inplace=True)
+    df.reset_index(inplace=True)
+    df['time'] = pd.to_datetime(df['time'])
+    df.set_index("time", drop=True, inplace=True)
+    df.index[0]
+    df.drop(["oi", 'Volume'], axis=1, inplace=True)
+    return df
 
 def get_only_today_data(df,e):
     today = df[df.index.date == e.date()].copy()
@@ -92,6 +113,8 @@ def calculate_everthing(percentchange):
 
 overall = []
 
+
+
 symbols = ['ADANIPORTS.NS',
  'ASIANPAINT.NS',
  'AXISBANK.NS',
@@ -152,8 +175,9 @@ for symbol in symbols:
     intra_data['atr']=TA.ATR(intra_data)
 
     # setting common starting_date for intraday data and EOD data / slicing data
-    starting_date = intra_data.index[0].date()
+    starting_date = dt.datetime(2020,2,3,0,0).date()
     daily = daily.loc[starting_date:,]
+    intra_data = intra_data.loc[starting_date:,]
     '''note piv dataframe has has only pivot points only 
         and daily dataframe has EOD data and both has same starting date
         now intraday data and EOD data has same starting date set'''
@@ -163,9 +187,11 @@ for symbol in symbols:
 
     # since this backtest is only for intraday so we will go through day by day data and test our strategy
     for e in daily.index:     # looping in EOD data index
+        # break
         # this will return intraday data for date e
         today = get_only_today_data(intra_data, e)
-
+        if today.empty:
+            continue
         # this will set_indicator to my intraday data
         # today = set_indicator(today, atr, e)
 
@@ -212,9 +238,9 @@ for symbol in symbols:
                     trade[e]['sold_at'] = sp 
                     trade[e]['pc'] = pc
                     break
-                elif today.loc[i, "Low"] < (high15-2*atr) and pos == 1: # hit sl
+                elif today.loc[i, "Low"] < pre_close*.98 and pos == 1: # hit sl
                     pos = 0
-                    sp = high15-2*atr
+                    sp = pre_close*.98
                     pc=(sp/bp-1)*100
                     percentchange.append(pc)
                     trade[e]["buyed_at"] = bp
