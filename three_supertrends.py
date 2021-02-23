@@ -7,7 +7,7 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 
 def get_intra_data(symbol,n):
-    data = yf.download(tickers=symbol, interval="15m", period=f"{n}d", end=dt.datetime.now())
+    data = yf.download(tickers=symbol, interval="5m", period=f"{n}d", end=dt.datetime.now())
     data.index = data.index.tz_localize(None)
     data.drop(["Adj Close", 'Volume'], axis=1, inplace=True)
     return data
@@ -70,16 +70,8 @@ def st_dir_refresh(ohlc,ticker,e,shifted):
     global st_dir
     if ohlc.loc[e,"st1"] > ohlc.loc[e,"Close"] and shifted.loc[e,"st1"] < shifted.loc[e,"Close"]:
         st_dir[ticker][0] = "red"
-    if ohlc.loc[e,"st2"] > ohlc.loc[e,"Close"] and shifted.loc[e,"st2"] < shifted.loc[e,"Close"]:
-        st_dir[ticker][1] = "red"
-    if ohlc.loc[e,"st3"] > ohlc.loc[e,"Close"] and shifted.loc[e,"st3"] < shifted.loc[e,"Close"]:
-        st_dir[ticker][2] = "red"
     if ohlc.loc[e,"st1"] < ohlc.loc[e,"Close"] and shifted.loc[e,"st1"] > shifted.loc[e,"Close"]:
         st_dir[ticker][0] = "green"
-    if ohlc.loc[e,"st2"] < ohlc.loc[e,"Close"] and shifted.loc[e,"st2"] > shifted.loc[e,"Close"]:
-        st_dir[ticker][1] = "green"
-    if ohlc.loc[e,"st3"] < ohlc.loc[e,"Close"] and shifted.loc[e,"st3"] > shifted.loc[e,"Close"]:
-        st_dir[ticker][2] = "green"
 
 def sl_price(ohlc,e):
     """function to calculate stop loss based on supertrends"""
@@ -97,7 +89,7 @@ def sl_price(ohlc,e):
 
 
 
-def main(p,q,r):
+def main():
     n = 50
 
     tickers = ['ADANIPORTS.NS',
@@ -149,8 +141,8 @@ def main(p,q,r):
      'ULTRACEMCO.NS',
      'UPL.NS',
      'WIPRO.NS']
-    tickers = ["M&M.NS"]
-    ticker = tickers[0]
+    # tickers = ["M&M.NS"]
+    # ticker = tickers[0]
     # tickers to track - recommended to use max movers from previous day
     capital = 3000  # position size
     global st_dir
@@ -160,10 +152,8 @@ def main(p,q,r):
     for ticker in tickers:
         st_dir[ticker] = ["None", "None", "None"]
         print("starting passthrough for.....",ticker)
-        ohlc = get_intra_data(ticker,60)
-        ohlc["st1"] = supertrend(ohlc, p, 3)
-        ohlc["st2"] = supertrend(ohlc, q, 3)
-        ohlc["st3"] = supertrend(ohlc, r, 2)
+        ohlc = get_intra_data(ticker,50)
+        ohlc["st1"] = supertrend(ohlc, 7, 3)
         # ohlc["st1"] = supertrend(ohlc, p, m)
         # ohlc["st2"] = supertrend(ohlc, q, n)
         # ohlc["st3"] = supertrend(ohlc, r, o)
@@ -173,72 +163,32 @@ def main(p,q,r):
 
         pos = 0
         percentchange = []
-        st_dir[ticker] = ["None", "None", "None"]
+        st_dir[ticker] = ["None"]
         # today = get_only_today_data(ohlc, g)
         today = ohlc
-        shifted = ohlc[['Close','st1','st2','st3']].shift(1)
+        shifted = ohlc[['Close','st1']].shift(1)
         for e in today.index:
             if e == today.index[0]:
-                continue
-            if e.time() == dt.datetime(2020,2,5,15,25).time() or e.time() == dt.datetime(2020,2,5,15,30).time():
-                pos = 0
                 continue
             # sl = sl_price(today, e)
             st_dir_refresh(today,ticker,e,shifted)
             # if st_dir[ticker] == ["green", "green", "green"]: break
             quantity = int(capital/today.loc[e,"Close"])
-            if pos == 0  and e.time() != dt.datetime(2020,2,5,15,15).time():
-                if st_dir[ticker] == ["green","green","green"]:
+            if pos == 0 :
+                if st_dir[ticker] == ["green"]:
                     pos = 1
                     bp = today.loc[e,"Close"]
                     # print(f"Buying at : {bp}  time : {e}")
                     continue
-                if st_dir[ticker] == ["red","red","red"]:
-                    pos = -1
-                    sp = today.loc[e,"Close"]
-                    # print(f"Selling at : {sp}  time : {e}")
-                    continue
-            if pos == 1 and st_dir[ticker] == ["red","red","red"]  and e.time() != dt.datetime(2020,2,5,15,15).time():
+            if pos ==1 and st_dir[ticker] == ["red"]:
+                pos = 0
                 sp = today.loc[e,"Close"]
-                pos = -1
                 pc = (sp / bp - 1) * 100
-                # print(f"Selling at : {sp}  time : {e} and pc : {pc}")
                 percentchange.append(pc)
+                # print(f"Selling at : {sp}  time : {e} and pc {pc}")
                 continue
-            if pos == -1 and st_dir[ticker] == ["green","green","green"] and e.time() != dt.datetime(2020,2,5,15,15).time():
-                bp = today.loc[e,"Close"]
-                pos = 1
-                pc = (1- (bp/sp) ) * 100
-                # print(f"Buying at : {bp}  time : {e} and pc : {pc}")
-                percentchange.append(pc)
-                continue
-            if pos == 1 and e.time() == dt.datetime(2020,2,5,15,15).time():
-                pos = 0
-                sp = today.loc[e,"Open"]
-                pc = (sp / bp - 1) * 100
-                # print(f"**Selling at : {sp}  time : {e} and pc : {pc}")
-                percentchange.append(pc)
-                continue
-            elif pos == -1 and e.time() == dt.datetime(2020,2,5,15,15).time():
-                pos = 0
-                bp = today.loc[e,"Open"]
-                pc = (1 - (bp / sp)) * 100
-                # print(f"***Buying at : {bp}  time : {e} and pc : {pc}")
-                percentchange.append(pc)
-                continue
+
         print(np.array(percentchange).cumsum()[-1])
         # plt.plot(np.array(percentchange).cumsum())
-#p,q,r,m,n,o
-for p in range(5,9):
-    for q in range(7,14):
-        if p == q : continue
-        for r in range(9,17):
-            if p == r: continue
-            if q == r : continue
-            # for m in range(2,4):
-            #     for n in range(2,4):
-            #         for o in range(2,4):
-
-            st_dir = {}
-            # print(p,q,r)
-            main(p,q,r)
+st_dir = {}
+main()
