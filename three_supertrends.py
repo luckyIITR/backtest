@@ -150,7 +150,7 @@ def main():
         st_dir[ticker] = ["None"]
         print("starting passthrough for.....",ticker)
         ohlc = get_intra_data(ticker,50)
-        ohlc["st1"] = supertrend(ohlc, 5, 2)
+        ohlc["st1"] = supertrend(ohlc, 5, 4)
         # ohlc["st1"] = supertrend(ohlc, p, m)
         # ohlc["st2"] = supertrend(ohlc, q, n)
         # ohlc["st3"] = supertrend(ohlc, r, o)
@@ -215,7 +215,6 @@ def main():
                 continue
 
         print(np.array(percentchange).cumsum()[-1])
-        p_l.append(np.array(percentchange).cumsum()[-1])
-        # plt.plot(np.array(percentchange).cumsum())
+        plt.plot(np.array(percentchange).cumsum())
 st_dir = {}
 main()
