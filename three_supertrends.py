@@ -86,62 +86,60 @@ def sl_price(ohlc,e):
 
 
 
+tickers = ['GUJGASLTD.NS', 'ADANITRANS.NS', 'CONCOR.NS', 'M&M.NS',
+       'DALBHARAT.NS', 'RAMCOCEM.NS', 'TATAMOTORS.NS', 'HINDALCO.NS',
+       'EXIDEIND.NS', 'ADANIENT.NS', 'AUBANK.NS', 'NAUKRI.NS', 'SAIL.NS',
+       'SHREECEM.NS', 'MOTHERSUMI.NS', 'COFORGE.NS', 'M&MFIN.NS',
+       'BHARATFORG.NS', 'HDFCAMC.NS', 'AMARAJABAT.NS', 'IRCTC.NS',
+       'VOLTAS.NS', 'MPHASIS.NS', 'GSPL.NS', 'MINDTREE.NS', 'PGHH.NS',
+       'JSWSTEEL.NS', 'BAJAJFINSV.NS', 'BERGEPAINT.NS', 'ASHOKLEY.NS',
+       'PEL.NS', 'CASTROLIND.NS', 'APOLLOTYRE.NS', 'INDHOTEL.NS',
+       'INFY.NS', 'ADANIPORTS.NS', 'TATAPOWER.NS', 'BHARTIARTL.NS',
+       'BATAINDIA.NS', 'GAIL.NS', 'SRTRANSFIN.NS', 'BOSCHLTD.NS',
+       'POLYCAB.NS', 'BALKRISIND.NS', 'TECHM.NS', 'TATASTEEL.NS',
+       'WIPRO.NS', 'COROMANDEL.NS', 'ICICIBANK.NS', 'MGL.NS', 'LT.NS',
+       'ACC.NS', 'JINDALSTEL.NS', 'CHOLAFIN.NS', 'POWERGRID.NS',
+       'GODREJPROP.NS', 'ZEEL.NS', 'DLF.NS', 'TITAN.NS', 'AXISBANK.NS',
+       'ESCORTS.NS', 'HINDPETRO.NS', 'SIEMENS.NS', 'GRASIM.NS',
+       'DMART.NS', 'TCS.NS', 'ASIANPAINT.NS', 'EDELWEISS.NS', 'IOC.NS',
+       'BAJAJHLDNG.NS', 'ABCAPITAL.NS', 'JUBLFOOD.NS', 'HAVELLS.NS',
+       'TVSMOTOR.NS', 'ONGC.NS', 'TATACHEM.NS', 'MFSL.NS',
+       'IDFCFIRSTB.NS', 'INDUSTOWER.NS', 'HEROMOTOCO.NS', 'INDIGO.NS',
+       'AUROPHARMA.NS', 'IGL.NS', 'PFC.NS', 'RELIANCE.NS', 'EICHERMOT.NS',
+       'TORNTPOWER.NS', 'JSWENERGY.NS', 'HCLTECH.NS', 'HUDCO.NS',
+       'NMDC.NS', 'MUTHOOTFIN.NS', 'SRF.NS', 'IBULHSGFIN.NS',
+       'DRREDDY.NS', 'INDUSINDBK.NS', 'BEL.NS', 'HINDZINC.NS', 'BPCL.NS',
+       'YESBANK.NS', 'LICHSGFIN.NS', 'AMBUJACEM.NS', 'MARUTI.NS',
+       'MARICO.NS', 'GMRINFRA.NS', 'TATACONSUM.NS', 'IPCALAB.NS',
+       'NTPC.NS', 'RECLTD.NS', 'ICICIPRULI.NS', 'CUB.NS', 'PRESTIGE.NS',
+       'HDFCBANK.NS', 'SBIN.NS', 'OIL.NS', 'NATIONALUM.NS',
+       'CUMMINSIND.NS', 'SANOFI.NS', 'HDFC.NS', 'PIDILITIND.NS',
+       'BANDHANBNK.NS', 'SYNGENE.NS', 'NESTLEIND.NS', 'LALPATHLAB.NS',
+       'ULTRACEMCO.NS', 'ICICIGI.NS', 'FORTIS.NS', 'TRENT.NS',
+       'SBICARD.NS', 'AJANTPHARM.NS', 'APLLTD.NS', 'COALINDIA.NS',
+       'UPL.NS', 'HDFCLIFE.NS', 'BIOCON.NS', 'MRF.NS', 'L&TFH.NS',
+       'ABBOTINDIA.NS', 'GLENMARK.NS', 'DHANI.NS', 'OBEROIRLTY.NS',
+       'ATGL.NS', 'RAJESHEXPO.NS', 'TORNTPHARM.NS', 'BAJAJ-AUTO.NS',
+       'CIPLA.NS', 'AARTIIND.NS', 'LUPIN.NS', 'EMAMILTD.NS',
+       'SUNPHARMA.NS', 'MCDOWELL-N.NS', 'FEDERALBNK.NS', 'BANKINDIA.NS',
+       'ISEC.NS', 'COLPAL.NS', 'LTI.NS', 'NATCOPHARM.NS', 'CADILAHC.NS',
+       'CESC.NS', 'NAM-INDIA.NS', 'ITC.NS', 'PAGEIND.NS', 'PIIND.NS',
+       'APOLLOHOSP.NS', 'GICRE.NS', 'DABUR.NS', 'ENDURANCE.NS',
+       'PFIZER.NS', 'CROMPTON.NS', 'SBILIFE.NS', 'SUNTV.NS', 'UBL.NS',
+       'PETRONET.NS', 'BAJFINANCE.NS', 'NAVINFLUOR.NS', 'LTTS.NS',
+       'DIVISLAB.NS', 'RBLBANK.NS', 'BANKBARODA.NS', 'FRETAIL.NS',
+       'VBL.NS', 'GODREJIND.NS', 'KOTAKBANK.NS', 'ALKEM.NS',
+       'HINDUNILVR.NS', 'ABFRL.NS', 'OFSS.NS', 'BBTC.NS', 'CANBK.NS',
+       'ADANIGREEN.NS', 'BRITANNIA.NS', 'GODREJAGRO.NS', 'WHIRLPOOL.NS',
+       'GODREJCP.NS', 'MANAPPURAM.NS', 'UNIONBANK.NS', 'IDEA.NS',
+       'VGUARD.NS', 'PNB.NS', 'BHEL.NS']
+tickers = ['PNB.NS']
 
-
-
-def main():
+def main(p,q,ticker):
     n = 50
+    global p_l
 
-    tickers = ['ADANIPORTS.NS',
-     'ASIANPAINT.NS',
-     'AXISBANK.NS',
-     'BAJAJ-AUTO.NS',
-     'BAJAJFINSV.NS',
-     'BAJFINANCE.NS',
-     'BHARTIARTL.NS',
-     'BPCL.NS',
-     'BRITANNIA.NS',
-     'CIPLA.NS',
-     'COALINDIA.NS',
-     'DIVISLAB.NS',
-     'DRREDDY.NS',
-     'EICHERMOT.NS',
-     'GAIL.NS',
-     'GRASIM.NS',
-     'HCLTECH.NS',
-     'HDFC.NS',
-     'HDFCBANK.NS',
-     'HDFCLIFE.NS',
-     'HEROMOTOCO.NS',
-     'HINDALCO.NS',
-     'HINDUNILVR.NS',
-     'ICICIBANK.NS',
-     'INDUSINDBK.NS',
-     'INFY.NS',
-     'IOC.NS',
-     'ITC.NS',
-     'JSWSTEEL.NS',
-     'KOTAKBANK.NS',
-     'LT.NS',
-     'M&M.NS',
-     'MARUTI.NS',
-     'NESTLEIND.NS',
-     'NTPC.NS',
-     'ONGC.NS',
-     'POWERGRID.NS',
-     'RELIANCE.NS',
-     'SBILIFE.NS',
-     'SBIN.NS',
-     'SUNPHARMA.NS',
-     'TATAMOTORS.NS',
-     'TATASTEEL.NS',
-     'TCS.NS',
-     'TECHM.NS',
-     'TITAN.NS',
-     'ULTRACEMCO.NS',
-     'UPL.NS',
-     'WIPRO.NS']
-    # tickers = ["M&M.NS"]
+
     # ticker = tickers[0]
     # tickers to track - recommended to use max movers from previous day
     capital = 3000  # position size
@@ -149,46 +147,96 @@ def main():
     st_dir = {}  # directory to store super trend status for each ticker
 
 
-    for ticker in tickers:
-        st_dir[ticker] = ["None", "None", "None"]
-        print("starting passthrough for.....",ticker)
-        ohlc = get_intra_data(ticker,50)
-        ohlc["st1"] = supertrend(ohlc, 7, 3)
-        # ohlc["st1"] = supertrend(ohlc, p, m)
-        # ohlc["st2"] = supertrend(ohlc, q, n)
-        # ohlc["st3"] = supertrend(ohlc, r, o)
-        ohlc.dropna(inplace=True)
+    # for ticker in tickers:
+    st_dir[ticker] = ["None"]
+    print("starting passthrough for.....",ticker)
+    ohlc = get_intra_data(ticker,50)
+    ohlc["st1"] = supertrend(ohlc, p, q)
+    # ohlc["st1"] = supertrend(ohlc, p, m)
+    # ohlc["st2"] = supertrend(ohlc, q, n)
+    # ohlc["st3"] = supertrend(ohlc, r, o)
+    ohlc.dropna(inplace=True)
 
-        # today[["st1","st2","st3"]].plot()
+    # today[["st1","st2","st3"]].plot()
 
-        pos = 0
-        percentchange = []
-        st_dir[ticker] = ["None"]
-        # today = get_only_today_data(ohlc, g)
-        today = ohlc
-        shifted = ohlc[['Close','st1']].shift(1)
-        for e in today.index:
-            if e == today.index[0]:
+    pos = 0
+    percentchange = []
+    st_dir[ticker] = ["None"]
+    # today = get_only_today_data(ohlc, g)
+    today = ohlc
+    shifted = ohlc[['Close','st1']].shift(1)
+    for e in today.index:
+        if e == today.index[0]:
+            continue
+        if e.time() == dt.datetime(2020, 2, 5, 15, 25).time() or e.time() == dt.datetime(2020, 2, 5, 15, 20).time():
+            pos = 0
+            continue
+        # sl = sl_price(today, e)
+        st_dir_refresh(today, ticker, e, shifted)
+        # if st_dir[ticker] == ["green", "green", "green"]: break
+        quantity = int(capital / today.loc[e, "Close"])
+        if pos == 0 and e.time() != dt.datetime(2020, 2, 5, 15, 15).time():
+            if st_dir[ticker] == ["green"]:
+                pos = 1
+                bp = today.loc[e, "Close"]
+                # print(f"Buying at : {bp}  time : {e}")
                 continue
-            # sl = sl_price(today, e)
-            st_dir_refresh(today,ticker,e,shifted)
-            # if st_dir[ticker] == ["green", "green", "green"]: break
-            quantity = int(capital/today.loc[e,"Close"])
-            if pos == 0 :
-                if st_dir[ticker] == ["green"]:
-                    pos = 1
-                    bp = today.loc[e,"Close"]
-                    # print(f"Buying at : {bp}  time : {e}")
-                    continue
-            if pos ==1 and st_dir[ticker] == ["red"]:
-                pos = 0
-                sp = today.loc[e,"Close"]
-                pc = (sp / bp - 1) * 100
-                percentchange.append(pc)
-                # print(f"Selling at : {sp}  time : {e} and pc {pc}")
+            if st_dir[ticker] == ["red"]:
+                pos = -1
+                sp = today.loc[e, "Close"]
+                # print(f"Selling at : {sp}  time : {e}")
                 continue
+        if pos == 1 and st_dir[ticker] == ["red"] and e.time() != dt.datetime(2020, 2, 5, 15,15).time():
+            sp = today.loc[e, "Close"]
+            pos = -1
+            pc = (sp / bp - 1) * 100
+            # print(f"Selling at : {sp}  time : {e} and pc : {pc}")
+            percentchange.append(pc)
+            continue
+        if pos == -1 and st_dir[ticker] == ["green"] and e.time() != dt.datetime(2020, 2, 5, 15,15).time():
+            bp = today.loc[e, "Close"]
+            pos = 1
+            pc = (1 - (bp / sp)) * 100
+            # print(f"Buying at : {bp}  time : {e} and pc : {pc}")
+            percentchange.append(pc)
+            continue
+        if pos == 1 and e.time() == dt.datetime(2020, 2, 5, 15, 15).time():
+            pos = 0
+            sp = today.loc[e, "Open"]
+            pc = (sp / bp - 1) * 100
+            # print(f"**Selling at : {sp}  time : {e} and pc : {pc}")
+            percentchange.append(pc)
+            continue
+        elif pos == -1 and e.time() == dt.datetime(2020, 2, 5, 15, 15).time():
+            pos = 0
+            bp = today.loc[e, "Open"]
+            pc = (1 - (bp / sp)) * 100
+            # print(f"***Buying at : {bp}  time : {e} and pc : {pc}")
+            percentchange.append(pc)
+            continue
 
-        print(np.array(percentchange).cumsum()[-1])
-        # plt.plot(np.array(percentchange).cumsum())
-st_dir = {}
-main()
+    print(np.array(percentchange).cumsum()[-1])
+    p_l.append(np.array(percentchange).cumsum()[-1])
+    # plt.plot(np.array(percentchange).cumsum())
+tic = []
+final = pd.DataFrame()
+for ticker in tickers:
+    p_l = []
+    p_val = []
+    q_val = []
+    tic.append(ticker)
+    for p in range(5,10):
+        for q in range(2,5):
+            p_val.append(p)
+            q_val.append(q)
+            st_dir = {}
+            print(p,q)
+            main(p,q,ticker)
+
+    overall = pd.DataFrame.from_dict({"p":p_val,"q":q_val,"p_l" : p_l}, orient='columns', dtype=None, columns=None)
+
+    # final = pd.DataFrame()
+    final = pd.concat([final,overall[overall.p_l == overall.p_l.max()]])
+
+    final.index = tic
+    final.to_csv("alert_data.csv")
